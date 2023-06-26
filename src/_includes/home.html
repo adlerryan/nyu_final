@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/homestyle.css" />
+    <title>{{site.siteTitle}}</title>
+  </head>
+  <body class=""{{pageClass}}>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #798619; position:relative;">
+
+      <!-- <button class="navbar-toggler" type="button"> -->
+          <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ml-auto">
+            {% for page in collections.page %}
+            <li class="nav-item active">
+              <a class="nav-link" href="{{ page.url | url }}">{{ page.data.navTitle }} <span class="sr-only"></span></a>
+            </li>
+            {% endfor %}
+          </ul>
+      </div>   
+  </nav>
+
+      <main>
+        <section class="hero">
+          <h1>{{ pageTitle }}</h1>
+          <p>Find all your Winter Sports Equipment at a discounted price.</p>
+          <a href="#" class="btn">Learn More</a>
+        </section>
+        <section class="grid-container">
+          <div class="grid-item winter-sports">
+            <h2>Jackets</h2>
+            <div class="snow-animation">
+             
+            </div>
+          </div>
+          <div class="grid-item">
+            <!-- <a href="pages/contact/" class="grid-item"></a> -->
+            
+            <h2>Pants</h2>
+          </div>
+          <div class="grid-item">
+            <h2>Googles / Headwear</h2>
+          </div>
+          <div class="grid-item">
+            <h2>Skis / Snowboards</h2>
+          </div>
+        </section>
+        <section class="other-products">
+          <h2>Rentals</h2>
+        </section>
+
+        <div class="bio">
+          <div class="text-content">
+            <p>Welcome to Vermont Ski Shop, your ultimate destination for thrilling alpine adventures and unforgettable skiing experiences! Nestled amidst the breathtaking peaks of Green Mountains, our resort offers an idyllic winter wonderland for all snow enthusiasts. Whether you're a seasoned pro or a beginner eager to hit the slopes, we have something to suit every skill level and taste.</p>
+            <p>At Vermont Ski Shop, we pride ourselves on our world-class slopes, impeccable service, and unrivaled natural beauty. Our meticulously maintained trails cater to skiers and snowboarders of all abilities, ensuring an exhilarating ride for everyone. From gentle slopes perfect for beginners to challenging black diamond runs that will test even the most experienced thrill-seekers, our resort guarantees excitement around every turn.</p>
+            <p>In addition to our superb skiing conditions, we offer a wide range of amenities and activities to make your stay truly exceptional. Unwind and relax in our cozy mountain lodges, complete with luxurious accommodations and breathtaking views of the snow-covered peaks. Indulge in delicious cuisine at our renowned restaurants, savoring delectable meals prepared by our talented chefs using the freshest local ingredients.</p>
+            <!-- <p>For those seeking a break from the slopes, we offer a variety of other winter activities to keep you entertained. Embark on a snowshoeing expedition through picturesque forests, where you can immerse yourself in the serene beauty of nature. Experience the thrill of ice skating on our scenic rink, or try your hand at snow tubing for a fun-filled adventure with family and friends.</p>
+            <p>Safety is our utmost priority, and we take pride in our top-notch facilities and trained staff. Our experienced instructors are ready to guide beginners and provide expert coaching for those looking to refine their skills. With our state-of-the-art equipment rental services, you can gear up with the latest gear and hit the slopes with confidence.</p>
+            <p>Whether you're seeking an action-packed family vacation, a romantic getaway, or simply a rejuvenating escape in the mountains, Vermont Ski Shop is your ideal destination. So grab your skis, bundle up, and get ready for an unforgettable winter adventure. Book your stay today and discover the magic of [Your Ski Resort Name]. We can't wait to welcome you to our snowy paradise!</p> -->
+          </div>
+        </div>
+      </main>
+
+      <footer>
+        <div class="footer-content">
+          <p>© 2023 Vermont Ski Shop. All rights reserved.</p>
+          <p>
+            Address:
+            1234 Mountain Road, Vermont, USA</a>
+          </p>
+          <p>Email: info@yourskiresort.com</p>
+        </div>
+      </footer>
+      <script>
+        window.addEventListener('DOMContentLoaded', (event) => {
+          document.querySelectorAll('.grid-item').forEach((item) => {
+            item.addEventListener('click', (event) => {
+              window.location.href = 'pages/shop/';
+            });
+          });
+        });
+
+        window.addEventListener('DOMContentLoaded', (event) => {
+          document.querySelectorAll('.other-products').forEach((item) => {
+            item.addEventListener('click', (event) => {
+              window.location.href = 'pages/contact/';
+            });
+          });
+        });
+      </script>
+
+  </body>
+</html>

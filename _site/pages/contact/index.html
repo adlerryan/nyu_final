@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/homestyle.css" />
+    <title>Vermont Ski Shop</title>
+  </head>
+  <body class="">
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #798619; position:relative;">
+
+      <!-- <button class="navbar-toggler" type="button"> -->
+          <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ml-auto">
+            
+            <li class="nav-item active">
+              <a class="nav-link" href="/">Home <span class="sr-only"></span></a>
+            </li>
+            
+            <li class="nav-item active">
+              <a class="nav-link" href="/pages/shop/">Shop <span class="sr-only"></span></a>
+            </li>
+            
+            <li class="nav-item active">
+              <a class="nav-link" href="/pages/pictures/">Pictures <span class="sr-only"></span></a>
+            </li>
+            
+            <li class="nav-item active">
+              <a class="nav-link" href="/pages/contact/">Rentals <span class="sr-only"></span></a>
+            </li>
+            
+          </ul>
+      </div>   
+  </nav>
+
+  <main>
+    <section>
+        <form class="booking-form">
+          <input type="text" id="name" name="name" placeholder="Full Name">
+          <input type="email" id="email" name="email" placeholder="Email">
+          <input type="text" id="phone" name="phone" placeholder="Phone Number">
+          <input type="date" id="start-date" name="start-date" placeholder="Start Date (YYYY-MM-DD)">
+          <input type="date" id="end-date" name="end-date" placeholder="End Date (YYYY-MM-DD)">
+          <select id="ski-type" name="ski-type">
+            <option value="">Select Ski Type</option>
+            <option value="downhill">Downhill</option>
+            <option value="cross-country">Cross Country</option>
+            <option value="freestyle">Freestyle</option>
+          </select>
+          <input type="number" id="quantity" name="quantity" min="1" placeholder="Quantity">
+          <textarea id="special-requests" name="special-requests" rows="4" placeholder="Special Requests"></textarea>
+          <button type="submit">Book Now</button>
+        </form>
+      </section>
+  </main>
+  
+
+      <footer>
+        <div class="footer-content">
+          <p>© 2023 Vermont Ski Shop. All rights reserved.</p>
+          <p>
+            Address:
+            1234 Mountain Road, Vermont, USA</a>
+          </p>
+          <p>Email: info@yourskiresort.com</p>
+        </div>
+      </footer>
+
+  </body>
+</html>

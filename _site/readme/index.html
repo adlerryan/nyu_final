@@ -1,0 +1,816 @@
+<h1>The JAMStack, AJAX and Static Site Generation</h1>
+<h2>Homework</h2>
+<ul>
+<li>create your own New York Times developer account and use it to customize your Ajax page</li>
+</ul>
+<h2>Reading</h2>
+<ul>
+<li>watch this video on <a href="https://youtu.be/Oive66jrwBs">Fetch</a></li>
+<li>watch this video on <a href="https://11ty.rocks">Eleventy</a></li>
+</ul>
+<h2>Recomended 11ty Resources</h2>
+<ul>
+<li><a href="https://www.11ty.dev/">11ty</a></li>
+<li><a href="https://11ty.rocks">11ty Rocks</a></li>
+<li>Andy Bell's <a href="https://piccalil.li/course/learn-eleventy-from-scratch/">11ty</a> course.</li>
+</ul>
+<h2>Goals</h2>
+<ul>
+<li>introduce static site generation (SSG) with eleventy (11ty)</li>
+<li>introduce the Markdown language</li>
+<li>use templates and markdown to generate a web site</li>
+<li>introduce templating languages (Liquid) and YAML</li>
+</ul>
+<!-- The [site we are creating](https://heuristic-morse-711174.netlify.app/). -->
+<h2>Static Site Generation</h2>
+<h3>The JAMstack</h3>
+<p>A &quot;stack&quot; is a collection of software used to solve a common problem. In web development common stacks include MEAN (MongoDB, ExpressJS, Angular and Node), MERN (MongoDB, ExpressJS, React and Node) and LAMP (Linux, Apache, MySQL, and PHP).</p>
+<p>The <a href="https://jamstack.org/what-is-jamstack/">JAMstack</a> is an architecture that uses a build process to create web pages and sites that are deployed to a content delivery network.</p>
+<p>Recall the <a href="https://github.com/front-end-foundations/FlexNav#aside---design-patterns">design patterns</a> we examined previously. JAMstack sites are the simplest and most traditional - static HTML pages - but they way they are created is thoroughly modern.</p>
+<h3>Eleventy</h3>
+<p>As we just learned, JAMstack sites use pre-rendering tools that use a build process to create the multiple pages that comprise a web site.</p>
+<p><a href="https://www.11ty.io/">Eleventy</a> (aka 11ty) is a simple <a href="https://jamstack.org/generators/">static site generator</a> (SSG). Statically generated websites are very popular due to their simplicity, superior speed, SEO and security.</p>
+<p>The benefits of 11ty over other completing generators include the fact that it is written in JavaScript (Node) and its simplicity.</p>
+<h3>Initial Setup</h3>
+<p>Today we're are building a simple multipage <a href="https://zealous-kilby-113356.netlify.com">static website</a> with an <a href="https://zealous-kilby-113356.netlify.com/posts/ajax/">ajax connection</a> that fetches articles from the New York Times.</p>
+<p>Create a <code>.gitignore</code> file at the top level targeting the node_modules folder:</p>
+<pre><code class="language-sh">node_modules
+</code></pre>
+<pre><code class="language-sh">$ npm init -y
+$ npm install @11ty/eleventy
+</code></pre>
+<p>Add a script to <code>package.json</code>:</p>
+<pre><code class="language-js">&quot;scripts&quot;: {
+  &quot;start&quot;: &quot;eleventy --serve&quot;
+},
+</code></pre>
+<p>Note: since 11ty renders Markdown files we need to either delete the readme.md file in this repo or create an <code>.eleventyignore</code> file with the contents <code>readme.md</code>. Here's the <a href="https://www.11ty.dev/docs/ignores/">documentation</a> for Eleventy ignore files.</p>
+<p>Note the <code>.prettierignore</code>:</p>
+<pre><code># Ignore artifacts:
+build
+coverage
+
+# Ignore all readme files:
+readme.md
+</code></pre>
+<h3>Eleventy Configuration</h3>
+<p>Add <a href="https://www.11ty.dev/docs/copy/">passthroughs</a> for our static assets in an <code>.eleventy.js</code> file.</p>
+<pre><code class="language-js">module.exports = function (config) {
+  config.addPassthroughCopy(&quot;./src/css/&quot;);
+  config.addPassthroughCopy(&quot;./src/img/&quot;);
+  config.addPassthroughCopy(&quot;./src/js/&quot;);
+};
+</code></pre>
+<p>This is our eleventy configuration file. It is a function that exports its contents for use by the Eleventy publishing system.</p>
+<p>Add instructions for input and output folders:</p>
+<pre><code class="language-js">module.exports = function (config) {
+  config.addPassthroughCopy(&quot;./src/css/&quot;);
+  config.addPassthroughCopy(&quot;./src/img/&quot;);
+  config.addPassthroughCopy(&quot;./src/js/&quot;);
+
+  return {
+    dir: {
+      input: &quot;src&quot;,
+      output: &quot;_site&quot;,
+    },
+  };
+};
+</code></pre>
+<p>Run <code>npm start</code> and open the localhost address in Chrome.</p>
+<p>Note:</p>
+<ul>
+<li>the generated <code>_site</code> folder</li>
+<li>the folders specified in our config are copied into <code>_site</code></li>
+</ul>
+<h3>Markdown</h3>
+<p>Create <code>src/index.md</code> on the top level with the following structure:</p>
+<pre><code class="language-md">## Articles
+
+A list of articles will appear here
+</code></pre>
+<p>Note the conversion to HTML.</p>
+<h3>Create a Layout Template</h3>
+<p><a href="https://www.11ty.io/docs/layouts/">Reference</a></p>
+<p>Create <code>src/_includes/layout.html</code>:</p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot; /&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; /&gt;
+    &lt;link rel=&quot;stylesheet&quot; href=&quot;/css/styles.css&quot; /&gt;
+    &lt;title&gt;My Blog&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;main tabindex=&quot;-1&quot; class=&quot;content&quot;&gt;
+      &lt;h1&gt;&lt;/h1&gt;
+      
+    &lt;/main&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>Note the <code>and</code> template regions. Our content will be inserted there.</p>
+<p>Eleventy supports <a href="https://www.developerdrive.com/best-javascript-templating-engines/">many</a> templating languages:</p>
+<ul>
+<li><a href="https://pugjs.org/api/getting-started.html">Pug</a></li>
+<li><a href="https://handlebarsjs.com">Handlebars</a></li>
+<li><a href="https://github.com/janl/mustache.js/">Moustache</a></li>
+<li><a href="https://mozilla.github.io/nunjucks/">Nunjucks</a></li>
+</ul>
+<p>If template languages are new to you don't worry, they are generally quite simple, resemble JavaScript and can be mastered easily.</p>
+<p>We'll use <a href="https://shopify.github.io/liquid/">Liquid</a> today. Liquid is the in-house templating language created and maintained by Shopify.</p>
+<p>Add a new block at the top of <code>index.md</code>:</p>
+<pre><code class="language-md">---
+layout: layout.html
+pageTitle: New York Today
+---
+
+## Articles
+
+A list of articles will appear here
+</code></pre>
+<p>The material at the top between the <code>---</code>'s is commonly called <a href="https://www.11ty.io/docs/data-frontmatter/">front matter</a> and is written in <a href="https://yaml.org/">YAML</a> (YAML Ain't Markup Language). YAML is typically used for processing instructions.</p>
+<p>Add more content:</p>
+<pre><code class="language-md">---
+layout: layout.html
+pageTitle: New York Today
+---
+
+## Articles
+
+&gt; Dorothy followed her through many of the beautiful rooms in her castle.
+
+A list of articles will appear here
+
+- bullet one
+- etc
+</code></pre>
+<p>The index file we created has been merged with <code>_includes/layout</code> because of the <code>layout: layout.html</code> front matter instruction.</p>
+<p>Now that the page is linked to our template - <code>layout.html</code> - it includes the <code>&lt;h1&gt;</code> tag referenced there <code>&lt;h1&gt;&lt;/h1&gt;</code>.</p>
+<p><code>layout.html</code> uses a <a href="https://shopify.github.io/liquid/basics/introduction/">liquid</a> snippet. We will be using a handful of these.</p>
+<p>Because the <code>_site</code> folder is generated by eleventy we can add it to our <code>.gitignore</code>.</p>
+<h3>1.6.1. Markdown</h3>
+<p><a href="https://www.markdownguide.org/getting-started/">Markdown</a> is an extremely simple language used extensively in web development.</p>
+<p>It allows you to create content using an easy-to-read, easy-to-write plain text format. It converts to structurally valid HTML. Invented by <a href="https://daringfireball.net/projects/markdown/">John Gruber</a> - it (or one of its many <a href="https://help.github.com/en/articles/basic-writing-and-formatting-syntax">flavors</a>) is ubiquitous in web publishing. This readme file is written in <a href="https://www.markdownguide.org/basic-syntax#code">markdown</a>.</p>
+<p>Note: many of the conventions for Markdown arose from how people used email when it was confined to simple text documents, e.g. a bulleted list:</p>
+<pre><code class="language-txt">- item one
+- item two
+- item three
+</code></pre>
+<h3>1.6.2. Create a Collection</h3>
+<p>We wll create a collection of pages using <a href="https://www.11ty.io/docs/collections/">tags</a> in our front matter.</p>
+<p>In a new pages folder, <code>pages/about.md</code>:</p>
+<pre><code class="language-md">---
+layout: layout.html
+pageTitle: About Us
+tags: page
+navTitle: About
+---
+
+## We are
+
+- a group of commited citizens
+- a caring community
+- a force in national politics
+
+We are New Yorkers.
+
+[Home](/)
+</code></pre>
+<p>Note:</p>
+<ul>
+<li>the changes in the <code>_site</code> folder (navigate to <code>http://localhost:8080/pages/about/</code>)</li>
+<li>the transformation of markdown to HTML (examine the HTML in dev tools)</li>
+</ul>
+<p>Create a navbar in <code>layout.html</code>:</p>
+<pre><code class="language-html">&lt;nav aria-label=&quot;Primary navigaton&quot;&gt;
+  &lt;ul&gt;
+    
+  &lt;/ul&gt;
+&lt;/nav&gt;
+</code></pre>
+<p>Add a tag and nav title to index.md:</p>
+<pre><code class="language-md">---
+layout: layout.html
+pageTitle: New York Today
+navTitle: Home
+tags: page
+---
+</code></pre>
+<p>You should see a list of navTitles at the top.</p>
+<p>The front matter <code>navTitle</code> and <code>tags</code> in our two pages are used in the template's navbar.</p>
+<p>Add anchor tags to the template:</p>
+<pre><code class="language-html">&lt;nav&gt;
+  &lt;ul&gt;
+    
+  &lt;/ul&gt;
+&lt;/nav&gt;
+</code></pre>
+<p>Let's a few more pages to the pages folder:</p>
+<p><code>contact.md</code>:</p>
+<pre><code class="language-md">---
+layout: layout.html
+pageTitle: Contact Us
+tags: page
+navTitle: Contact
+---
+
+## Here's how:
+
+- 917 865 5517
+
+[Home](/)
+</code></pre>
+<p>And <code>pictures.md</code>:</p>
+<pre><code class="language-md">---
+pageTitle: Apples
+navTitle: Pictures
+singleImage: /img/apples.png
+---
+
+![alt info goes here](  )
+
+[Home](/)
+</code></pre>
+<p>Link it to the template, add a tag and multiple images:</p>
+<pre><code class="language-md">---
+layout: layout.html
+pageTitle: Apples
+navTitle: Pictures
+tags: page
+singleImage: /img/apples.png
+images:
+  - apples.png
+  - apples-red.png
+  - apples-group.png
+---
+</code></pre>
+<p>Examine the image options:</p>
+<pre><code class="language-md">---
+layout: layout.html
+pageTitle: Apples
+navTitle: Pictures
+tags: page
+singleImage: /img/apples.png
+images:
+  - apples.png
+  - apples-red.png
+  - apples-group.png
+---
+
+## Markdown, single image:
+
+![alt info goes here](  )
+
+## HTML, single image:
+
+&lt;img src=&quot;&quot; alt=&quot;info goes here&quot; style=&quot;transform: scale(50%) rotate(20deg);&quot; /&gt;
+
+## Markdown in Liquid for loop:
+
+
+
+## HTML in Liquid for loop:
+
+
+
+[Home](/)
+</code></pre>
+<p>Note the use of HTML in the Markdown file.</p>
+<p>Navigate to <code>http://localhost:8080/pages/pictures/</code></p>
+<p>We can use the front matter to define a class for this page.</p>
+<p>Add the following to the <code>pictures.md</code> front matter:</p>
+<pre><code class="language-txt">pageClass: pictures
+</code></pre>
+<p>Add the following to the template's body tag:</p>
+<pre><code class="language-html">&lt;body class=&quot;&quot;&gt;
+</code></pre>
+<p>Now we can address any element on the page using our style sheet:</p>
+<pre><code class="language-css">.pictures img {
+  max-width: 50%;
+}
+.pictures h1 {
+  color: rgb(11, 123, 11);
+}
+</code></pre>
+<h3>Data Folder</h3>
+<p>11ty allows you to create a <code>_data</code> folder which can then be used to store information you need for your site.</p>
+<p>Create a <code>_data</code> folder in <code>src</code> and add <code>site.json</code> with the following json:</p>
+<pre><code class="language-js">{
+  &quot;siteTitle&quot;: &quot;My first 11ty Site&quot;
+}
+</code></pre>
+<p>Then use it in your template:</p>
+<pre><code class="language-html">&lt;title&gt;&lt;/title&gt;
+</code></pre>
+<h4>Tagged Collections</h4>
+<p><a href="https://www.11ty.io/docs/collections/">Collections</a> use tags to group content.</p>
+<p>Note: you can use multiple tags, e.g.:</p>
+<pre><code class="language-md">---
+layout: layout.html
+pageTitle: Contact Us
+tags:
+  - page
+  - contact
+navTitle: Contact
+---
+</code></pre>
+<p>YAML front matter tags can be written</p>
+<p><code>tags: page</code> or</p>
+<p><code>tags: [page]</code></p>
+<p>i.e. if you need multiple tags use: <code>tags: [page, other]</code>.</p>
+<p>Here's the tagging <a href="https://www.11ty.io/docs/collections/#tag-syntax">documentation</a>.</p>
+<h4>HTML and Markdown</h4>
+<p>As noted, you can use HTML in a markdown file.</p>
+<p>Change <code>contact.md</code>:</p>
+<pre><code class="language-html">---
+layout: layout.html
+pageTitle: Contact Us
+tags: page
+navTitle: Contact
+---
+
+&lt;h2&gt;Here's how:&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;917 865 5517&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;a href=&quot;/&quot;&gt;Home&lt;/a&gt;
+</code></pre>
+<p>You can use HTML files alongside markdown.</p>
+<p>Change the name of <code>contact.md</code> to <code>contact.html</code>.</p>
+<p>Note that you cannot use markdown in an HTML file.</p>
+<h3>Simplify the Posts Collection</h3>
+<p>You can use json to simplify data management.</p>
+<p>We will add additional tags that can be used to reorganize content.</p>
+<p>Create <code>pages/pages.json</code>:</p>
+<pre><code class="language-js">{
+	&quot;layout&quot;: &quot;layout.html&quot;,
+	&quot;tags&quot;: [&quot;page&quot;, &quot;nav&quot;]
+}
+</code></pre>
+<p>Any document in the pages folder will inherit these properties. We can now remove the <code>tags</code> and <code>layout</code> metadata from all files in the pages directory.</p>
+<p>E.g.: <code>pages/about.md</code>:</p>
+<pre><code class="language-md">---
+pageTitle: About Us
+navTitle: About
+---
+
+## We are
+
+- a group of commited New Yorkers
+- a caring community
+- a force in national politics
+
+We are New Yorkers.
+
+[Home](/)
+</code></pre>
+<p>Perform the same deletions on all files in <code>pages</code>.</p>
+<p>Let's use the <code>page</code> collection to display all the posts.</p>
+<p>In <code>index.md</code> :</p>
+<pre><code class="language-md">---
+layout: layout.html
+pageTitle: New York Today
+tags: page
+navTitle: Home
+---
+
+## Articles
+
+
+</code></pre>
+<p>Note: the <code>|</code> character in <code>post.date | date: &quot;%Y-%m-%d&quot;</code> is a filter.</p>
+<p>There are quite a number of <a href="https://help.shopify.com/en/themes/liquid/filters">available filters</a> for example: <code>upcase</code>:</p>
+<pre><code class="language-html">
+</code></pre>
+<h3>Commit and Deploy</h3>
+<p>Commit your changes, merge them into the main branch and push your site to a new Github repository.</p>
+<p>Sign into Netlify and create a new site from Git. Check the settings to ensure that Netlify has auto detected 11ty and deploy the site.</p>
+<p>Examine the deploy logs. Note that Netlify will download and install 11ty in order to generate your <code>_site</code> folder and deploy that folder to a web server.</p>
+<h2>Fetch</h2>
+<p>Fetch allows you to get data from your own or another's service. Web services expose data in the form of an API which allow you to get, delete, update or create data via <a href="http://jsonplaceholder.typicode.com/">routes</a>.</p>
+<p>Today, we will get data from the New York Times and display it on our home page.</p>
+<p>Edit <code>index.md</code> in VS Code:</p>
+<pre><code class="language-md">---
+layout: layout.html
+pageTitle: New York Today
+---
+
+## Articles
+
+&lt;button&gt;Show Stories&lt;/button&gt;
+</code></pre>
+<p>Add a hard coded link to the page in the template:</p>
+<pre><code class="language-html">&lt;nav&gt;
+  &lt;ul&gt;
+    &lt;!-- NEW --&gt;
+    &lt;li&gt;&lt;a href=&quot;/&quot;&gt;Home&lt;/a&gt;&lt;/li&gt;
+    
+  &lt;/ul&gt;
+&lt;/nav&gt;
+</code></pre>
+<p>The <code>fetch()</code> <a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API">API</a> takes one mandatory argument, the path to the resource you want to fetch. It returns something known as a Promise that returns a response after the content is received.</p>
+<p><em>API</em> stands for <a href="https://medium.freecodecamp.org/what-is-an-api-in-english-please-b880a3214a82">Application Programming Interface</a>.</p>
+<h3>1.8.2. Rest API</h3>
+<p>We need data we can fetch from the internet. We'll start with the <a href="http://jsonplaceholder.typicode.com/">Typicode</a> playground. Note that you can do more than just get data, you can also post, create, delete and update data. Together these functions are often refered to as <code>CRUD</code>.</p>
+<p>Open a console in the browser.</p>
+<p>A promise:</p>
+<pre><code class="language-sh">&gt; fetch('https://jsonplaceholder.typicode.com/posts')
+</code></pre>
+<p>A resolved promise using <code>.then</code>:</p>
+<pre><code class="language-sh">&gt; fetch('https://jsonplaceholder.typicode.com/posts').then(response =&gt; response.json())
+</code></pre>
+<p>Since the promise is resolved you can see the actual data in the console. It returns an array of 100 fake posts which we can console.log:</p>
+<pre><code class="language-sh">fetch('https://jsonplaceholder.typicode.com/posts/')
+  .then(response =&gt; response.json())
+  .then(data =&gt; console.log(data))
+</code></pre>
+<pre><code class="language-sh">fetch('https://jsonplaceholder.typicode.com/posts/')
+  .then(response =&gt; response.json())
+  .then(data =&gt; console.log( data.map( item =&gt; `&lt;h2&gt;${item.title}&lt;/h2&gt;` )))
+</code></pre>
+<p>You can see the same data if you travel to <code>https://jsonplaceholder.typicode.com/posts/</code> in a new tab. Try <a href="http://jsonplaceholder.typicode.com/">other resources</a> such as comments or photos.</p>
+<p>Note the basic structure - an array of objects:</p>
+<pre><code class="language-js">[
+  { ... },
+  { ... }
+]
+</code></pre>
+<p>The format is json - <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON">JavaScript Object Notation</a></p>
+<p>Let's start out our script with event delegation.</p>
+<p>In layout.html:</p>
+<p><code>&lt;script src=&quot;/js/scripts.js&quot;&gt;&lt;/script&gt;</code></p>
+<p>In <code>scripts.js</code>:</p>
+<pre><code class="language-js">document.addEventListener(&quot;click&quot;, clickHandlers);
+
+function clickHandlers(event) {
+  console.log(event.target);
+}
+</code></pre>
+<p>Use <a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/matches">matches</a> in the context of in <code>if</code> statement to run a function:</p>
+<pre><code class="language-js">document.addEventListener(&quot;click&quot;, clickHandlers);
+
+function clickHandlers(event) {
+  if (!event.target.matches(&quot;button&quot;)) return;
+  fetch(&quot;https://jsonplaceholder.typicode.com/posts&quot;)
+    .then((response) =&gt; response.json())
+    .then((json) =&gt; console.log(json));
+}
+</code></pre>
+<p>Instead of logging the data we will call another function:</p>
+<pre><code class="language-js">document.addEventListener(&quot;click&quot;, clickHandlers);
+
+function clickHandlers(event) {
+  if (!event.target.matches(&quot;button&quot;)) return;
+  fetch(&quot;https://jsonplaceholder.typicode.com/posts&quot;)
+    .then((response) =&gt; response.json())
+    .then((data) =&gt; showData(data));
+}
+
+function showData(data) {
+  document.querySelector(&quot;.stories&quot;).innerText = data[1].body;
+}
+</code></pre>
+<p>Be sure to add an empty element to the home page:</p>
+<pre><code class="language-html">&lt;main class=&quot;stories&quot;&gt;&lt;/main&gt;
+</code></pre>
+<p>Note:</p>
+<ul>
+<li><code>document.querySelector(&quot;.stories&quot;)</code> - targets an empty div</li>
+<li><code>data[1]</code> - we use <code>[1]</code> to get the second entry</li>
+<li><code>data[1].body</code> - we use dot notation to access just one of the properties of the object</li>
+</ul>
+<p><code>document.querySelector(&quot;.stories&quot;).innerText = data;</code> WONT WORK</p>
+<p>Demo : a quick tour of the network panel in Chrome's dev tools.</p>
+<pre><code class="language-js">function showData(data) {
+  console.log(data);
+
+  for (let i = 0; i &lt; data.length; i++) {
+    console.log(&quot;foo::&quot;, i, data[i]);
+  }
+
+  document.querySelector(&quot;.stories&quot;).innerText = data;
+}
+</code></pre>
+<pre><code class="language-js">function showData(data) {
+  console.log(data);
+
+  let content = &quot;&quot;;
+
+  for (let i = 0; i &lt; data.length; i++) {
+    console.log(&quot;foo::&quot;, i, data[i]);
+    content += data[i].title;
+  }
+
+  document.querySelector(&quot;.stories&quot;).innerText = content;
+}
+</code></pre>
+<pre><code class="language-js">  for (let i = 0; i &lt; data.length; i++) {
+    console.log(&quot;foo::&quot;, i, data[i]);
+    content += `&lt;h3&gt;${data[i].title}&lt;/h3&gt;`;
+  }
+</code></pre>
+<p>Use <code>innerHTML</code>: <code>document.querySelector(&quot;.stories&quot;).innerHTML = content;</code></p>
+<pre><code class="language-js">for (let i = 0; i &lt; data.length; i++) {
+  console.log(&quot;foo::&quot;, i, data[i]);
+  content += `&lt;h3&gt;${data[i].title}&lt;/h3&gt;&lt;p&gt;${data[i].body}&lt;/p&gt;`; // new
+}
+</code></pre>
+<p>With a <code>for of</code> loop:</p>
+<pre><code class="language-js">  for (let post of data) {
+    console.log(&quot;foo::&quot;, post);
+    content += `&lt;h3&gt;${post.title}&lt;/h3&gt;&lt;p&gt;${post.body}&lt;/p&gt;`; // new
+  }
+</code></pre>
+<p>With array.map():</p>
+<pre><code class="language-js">function showData(data) {
+  let content = data.map((post) =&gt; `&lt;h3&gt;${post.title}&lt;/h3&gt;&lt;p&gt;${post.body}&lt;/p&gt;`);
+
+  document.querySelector(&quot;.stories&quot;).innerHTML = content;
+}
+</code></pre>
+<h2>Local JSON Server</h2>
+<p>Use the db directory to start a server.</p>
+<p>Create a form to create a new employee.</p>
+<h2>New York Times API</h2>
+<p>Let's use the New York Times <a href="https://developer.nytimes.com/">developers</a> site for our data.</p>
+<pre><code class="language-js">document.addEventListener(&quot;click&quot;, clickHandlers);
+
+// store the link plus the API key in a variable
+const API =
+  &quot;https://api.nytimes.com/svc/topstories/v2/nyregion.json?api-key=RuG9N6lD1Xss81PdRbmhuiJHjuiPEt6R&quot;;
+
+function clickHandlers(event) {
+  if (!event.target.matches(&quot;button&quot;)) return;
+  fetch(API)
+    .then((response) =&gt; response.json())
+    .then((data) =&gt; showData(data));
+}
+
+function showData(data) {
+  console.log(data);
+}
+</code></pre>
+<p>Examine the nature of the returned data in the console. The <code>results</code> property contains the data we are interested in.</p>
+<pre><code class="language-js">function showData(data) {
+  console.log(data.results);
+}
+</code></pre>
+<h3>1.8.3. Looping</h3>
+<pre><code class="language-js">document.addEventListener(&quot;click&quot;, clickHandlers);
+
+var API =
+  &quot;https://api.nytimes.com/svc/topstories/v2/nyregion.json?api-key=RuG9N6lD1Xss81PdRbmhuiJHjuiPEt6R&quot;;
+
+function clickHandlers(event) {
+  if (!event.target.matches(&quot;button&quot;)) return;
+  fetch(API)
+    .then((response) =&gt; response.json())
+    .then((data) =&gt; showData(data.results));
+}
+
+function showData(stories) {
+  console.log(stories[0].title);
+  // initialize an empty string
+  var looped = &quot;&quot;;
+  // use += in a for loop that uses the length of the results
+  for (let story of stories) {
+    console.log(story);
+    looped =
+      looped +
+      `
+      &lt;div class=&quot;item&quot;&gt;
+        &lt;h3&gt;${story.title}&lt;/h3&gt;
+        &lt;p&gt;${story.abstract}&lt;/p&gt;
+      &lt;/div&gt;
+      `;
+  }
+  console.log(looped);
+}
+</code></pre>
+<p>Here's the script so far:</p>
+<pre><code class="language-js">document.addEventListener(&quot;click&quot;, clickHandlers);
+
+var API =
+  &quot;https://api.nytimes.com/svc/topstories/v2/nyregion.json?api-key=RuG9N6lD1Xss81PdRbmhuiJHjuiPEt6R&quot;;
+
+function clickHandlers(event) {
+  if (!event.target.matches(&quot;button&quot;)) return;
+  fetch(API)
+    .then((response) =&gt; response.json())
+    .then((data) =&gt; showData(data.results));
+}
+
+function showData(stories) {
+  var looped = &quot;&quot;;
+  for (let story of stories) {
+    looped += `
+      &lt;div class=&quot;item&quot;&gt;
+        &lt;h3&gt;${story.title}&lt;/h3&gt;
+        &lt;p&gt;${story.abstract}&lt;/p&gt;
+      &lt;/div&gt;
+      `;
+  }
+
+  document.querySelector(&quot;.stories&quot;).innerHTML = looped;
+}
+</code></pre>
+<p>An alternative method: use the <code>map()</code> method on the array:</p>
+<pre><code class="language-js">document.addEventListener(&quot;click&quot;, clickHandlers);
+
+var API =
+  &quot;https://api.nytimes.com/svc/topstories/v2/nyregion.json?api-key=RuG9N6lD1Xss81PdRbmhuiJHjuiPEt6R&quot;;
+
+function clickHandlers(event) {
+  if (!event.target.matches(&quot;button&quot;)) return;
+  fetch(API)
+    .then((response) =&gt; response.json())
+    .then((data) =&gt; showData(data.results));
+}
+
+function showData(stories) {
+  var looped = stories
+    .map(
+      (result) =&gt; `
+    &lt;div class=&quot;item&quot;&gt;
+      &lt;h3&gt;${result.title}&lt;/h3&gt;
+      &lt;p&gt;${result.abstract}&lt;/p&gt;
+    &lt;/div&gt;
+  `
+    )
+    .join(&quot;&quot;);
+
+  document.querySelector(&quot;.stories&quot;).innerHTML = looped;
+}
+</code></pre>
+<p>Add CSS to format the data:</p>
+<pre><code class="language-css">@media (min-width: 480px) {
+  .stories {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 2rem;
+  }
+}
+
+.stories .item {
+  border-bottom: 1px dashed #aaa;
+}
+</code></pre>
+<p>Remove the button:</p>
+<pre><code class="language-md">---
+layout: layout.html
+pageTitle: New York Today
+---
+
+## Articles
+
+&lt;div class=&quot;stories&quot;&gt;&lt;/div&gt;
+</code></pre>
+<p>And the script's dependency on it:</p>
+<pre><code class="language-js">var API =
+  &quot;https://api.nytimes.com/svc/topstories/v2/nyregion.json?api-key=RuG9N6lD1Xss81PdRbmhuiJHjuiPEt6R&quot;;
+
+function getStories(event) {
+  fetch(API)
+    .then((response) =&gt; response.json())
+    .then((data) =&gt; showData(data.results));
+}
+
+function showData(stories) {
+  var looped = stories
+    .map(
+      (result) =&gt; `
+    &lt;div class=&quot;item&quot;&gt;
+      &lt;h3&gt;${result.title}&lt;/h3&gt;
+      &lt;p&gt;${result.abstract}&lt;/p&gt;
+    &lt;/div&gt;
+  `
+    )
+    .join(&quot;&quot;);
+
+  document.querySelector(&quot;.stories&quot;).innerHTML = looped;
+}
+
+getStories();
+</code></pre>
+<p>Add elements from the API:</p>
+<pre><code class="language-js">function showData(stories) {
+  var looped = stories
+    .map(
+      (story) =&gt; `
+    &lt;div class=&quot;item&quot;&gt;
+    &lt;picture&gt;
+    &lt;img src=&quot;${story.multimedia[2].url}&quot; alt=&quot;&quot; /&gt;
+    &lt;caption&gt;${story.multimedia[2].caption}&lt;/caption&gt;
+    &lt;/picture&gt;
+      &lt;h3&gt;&lt;a href=&quot;${story.url}&quot;&gt;${story.title}&lt;/a&gt;&lt;/h3&gt;
+      &lt;p&gt;${story.abstract}&lt;/p&gt;
+    &lt;/div&gt;
+  `
+    )
+    .join(&quot;&quot;);
+
+  document.querySelector(&quot;.stories&quot;).innerHTML = looped;
+}
+</code></pre>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Element/picture">MDN picture element</a></p>
+<p>The script will error on all pages other than the home page.</p>
+<p>Add a page class and make getStories run only when that class is present on the page.</p>
+<pre><code class="language-md">---
+layout: layout.html
+pageTitle: New York Today
+pageClass: home
+---
+
+## Articles
+
+&lt;div class=&quot;stories&quot;&gt;Loading...&lt;/div&gt;
+</code></pre>
+<pre><code class="language-js">if (document.querySelector(&quot;.home&quot;)) {
+  getStories();
+}
+
+</code></pre>
+<h3>1.8.4. Second Deploy</h3>
+<p>Commit, merge and push the content to Github. Log in to <a href="https://app.netlify.com">app.netlify.com</a> and ensure that the deploy has succeeded.</p>
+<h2>1.9. Notes</h2>
+<h3>Create a blog (<code>pages/blog.md</code>):</h3>
+<pre><code class="language-md">---
+pageTitle: Blog
+navTitle: Blog
+---
+
+## My Blog
+
+
+</code></pre>
+<p><code>src/posts/posts.json</code>:</p>
+<pre><code class="language-js">{
+  &quot;layout&quot;: &quot;layout.html&quot;,
+  &quot;tags&quot;: [&quot;post&quot;]
+}
+</code></pre>
+<p>Dogs:</p>
+<pre><code class="language-md">---
+pageTitle: Dogs
+---
+
+## Dawgs
+
+![Cute!](https://place-puppy.com/300x300)
+</code></pre>
+<p>Cats:</p>
+<pre><code class="language-md">---
+pageTitle: Cats
+---
+
+## Cats
+
+![Cute!](http://placekitten.com/200/300)
+</code></pre>
+<h2>Generate pages from the NYT feed</h2>
+<p>Adding rendered articles</p>
+<p><code>$ npm i node-fetch</code></p>
+<p><code>/_data/articles.js</code></p>
+<pre><code class="language-js">const fetch = require(&quot;node-fetch&quot;);
+
+API =
+  &quot;https://api.nytimes.com/svc/topstories/v2/nyregion.json?api-key=RuG9N6lD1Xss81PdRbmhuiJHjuiPEt6R&quot;;
+
+module.exports = function () {
+  return new Promise((resolve, reject) =&gt; {
+    fetch(API)
+      .then((response) =&gt; response.json())
+      .then((data) =&gt; resolve(data.results))
+      .catch((e) =&gt; reject(e));
+  });
+};
+</code></pre>
+<p><code>/src/articles.liquid</code></p>
+<pre><code>---
+tags: articles
+layout: layout.html
+
+pagination:
+    data: articles
+    size: 1
+    alias: article
+permalink: &quot;article/undefined/&quot;
+---
+
+&lt;h2&gt; &lt;/h2&gt;
+
+&lt;p&gt;&lt;/p&gt;
+
+</code></pre>
+<p><code>/src/pages/articles.md</code></p>
+<pre><code class="language-md">---
+pageTitle: Articles
+navTitle: Articles
+---
+
+## Articles from file system
+
+
+</code></pre>
